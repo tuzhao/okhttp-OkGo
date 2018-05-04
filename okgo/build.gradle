@@ -1,14 +1,14 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
-        minSdkVersion rootProject.ext.libMinSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode rootProject.ext.versionCode
-        versionName rootProject.ext.versionName_okgo
+        minSdkVersion 14
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
     }
 
     lintOptions {
@@ -21,4 +21,4 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.10.0'
 }
 
-//apply from: 'bintray.gradle'
+apply from: 'bintray.gradle'
