@@ -10,6 +10,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName_okgo
+        javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
     }
 
     signingConfigs {
@@ -34,6 +35,9 @@ android {
             signingConfig signingConfigs.appkey
         }
     }
+
+    flavorDimensions "minApi"
+
     productFlavors {
         miui {
             proguardFile './proguard-rules.pro'
@@ -98,4 +102,5 @@ dependencies {
     compile 'com.lzy.widget:ninegridview:0.2.1'
     compile 'com.lzy.widget:imagepicker:0.3.2'
     compile 'com.lzy.widget:view-core:0.2.1'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.15'
 }
