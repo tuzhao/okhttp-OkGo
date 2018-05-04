@@ -17,7 +17,6 @@ package com.lzy.demo.okrx2;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.format.Formatter;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -27,18 +26,10 @@ import com.lzy.demo.R;
 import com.lzy.demo.base.BaseRxDetailActivity;
 import com.lzy.demo.ui.NumberProgressBar;
 import com.lzy.demo.utils.GlideImageLoader;
-import com.lzy.demo.utils.Urls;
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.lzy.imagepicker.ui.ImageGridActivity;
-import com.lzy.okgo.OkGo;
-import com.lzy.okgo.callback.StringCallback;
-import com.lzy.okgo.convert.StringConvert;
-import com.lzy.okgo.model.Progress;
-import com.lzy.okgo.model.Response;
-import com.lzy.okrx2.adapter.ObservableResponse;
 
-import java.io.File;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,14 +37,6 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 
 /**
  * ================================================
@@ -66,13 +49,20 @@ import io.reactivex.functions.Consumer;
  */
 public class RxFormUploadActivity extends BaseRxDetailActivity {
 
-    @Bind(R.id.formUpload1) Button btnFormUpload1;
-    @Bind(R.id.formUpload2) Button btnFormUpload2;
-    @Bind(R.id.downloadSize) TextView tvDownloadSize;
-    @Bind(R.id.tvProgress) TextView tvProgress;
-    @Bind(R.id.netSpeed) TextView tvNetSpeed;
-    @Bind(R.id.pbProgress) NumberProgressBar pbProgress;
-    @Bind(R.id.images) TextView tvImages;
+    @Bind(R.id.formUpload1)
+    Button btnFormUpload1;
+    @Bind(R.id.formUpload2)
+    Button btnFormUpload2;
+    @Bind(R.id.downloadSize)
+    TextView tvDownloadSize;
+    @Bind(R.id.tvProgress)
+    TextView tvProgress;
+    @Bind(R.id.netSpeed)
+    TextView tvNetSpeed;
+    @Bind(R.id.pbProgress)
+    NumberProgressBar pbProgress;
+    @Bind(R.id.images)
+    TextView tvImages;
 
     private List<ImageItem> imageItems;
     private NumberFormat numberFormat;
@@ -132,137 +122,11 @@ public class RxFormUploadActivity extends BaseRxDetailActivity {
 
     @OnClick(R.id.formUpload1)
     public void formUpload1(View view) {
-        ArrayList<File> files = new ArrayList<>();
-        if (imageItems != null && imageItems.size() > 0) {
-            for (int i = 0; i < imageItems.size(); i++) {
-                files.add(new File(imageItems.get(i).path));
-            }
-        }
-        //拼接参数
-        OkGo.<String>post(Urls.URL_FORM_UPLOAD)//
-                .tag(this)//
-                .headers("header1", "headerValue1")//
-                .headers("header2", "headerValue2")//
-                .params("param1", "paramValue1")//
-                .params("param2", "paramValue2")//
-//                .params("file1",new File("文件路径"))
-//                .params("file2",new File("文件路径"))
-//                .params("file3",new File("文件路径"))
-                .addFileParams("file", files)//
-                .converter(new StringConvert())//
-                .adapt(new ObservableResponse<String>())//
-                .doOnSubscribe(new Consumer<Disposable>() {
-                    @Override
-                    public void accept(@NonNull Disposable disposable) throws Exception {
-                        btnFormUpload1.setText("正在上传中...\n使用Rx方式做进度监听稍显麻烦,推荐使用方式2");
-                    }
-                })//
-                .observeOn(AndroidSchedulers.mainThread())//
-                .subscribe(new Observer<Response<String>>() {
-                    @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-                        addDisposable(d);
-                    }
 
-                    @Override
-                    public void onNext(@NonNull Response<String> response) {
-                        btnFormUpload1.setText("上传完成");
-                        handleResponse(response);
-                    }
-
-                    @Override
-                    public void onError(@NonNull Throwable e) {
-                        e.printStackTrace();
-                        btnFormUpload1.setText("上传出错");
-                        showToast(e.getMessage());
-                        handleError(null);
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
     }
 
     @OnClick(R.id.formUpload2)
     public void formUpload2(View view) {
-        final ArrayList<File> files = new ArrayList<>();
-        if (imageItems != null && imageItems.size() > 0) {
-            for (int i = 0; i < imageItems.size(); i++) {
-                files.add(new File(imageItems.get(i).path));
-            }
-        }
 
-        Observable.create(new ObservableOnSubscribe<Progress>() {
-            @Override
-            public void subscribe(@NonNull final ObservableEmitter<Progress> e) throws Exception {
-                OkGo.<String>post(Urls.URL_FORM_UPLOAD)//
-                        .tag(this)//
-                        .headers("header1", "headerValue1")//
-                        .headers("header2", "headerValue2")//
-                        .params("param1", "paramValue1")//
-                        .params("param2", "paramValue2")//
-                        //.params("file1",new File("文件路径"))
-                        //.params("file2",new File("文件路径"))
-                        //.params("file3",new File("文件路径"))
-                        .addFileParams("file", files)//
-                        .execute(new StringCallback() {
-                            @Override
-                            public void onSuccess(Response<String> response) {
-                                e.onComplete();
-                            }
-
-                            @Override
-                            public void onError(Response<String> response) {
-                                e.onError(response.getException());
-                            }
-
-                            @Override
-                            public void uploadProgress(Progress progress) {
-                                e.onNext(progress);
-                            }
-                        });
-            }
-        })//
-                .doOnSubscribe(new Consumer<Disposable>() {
-                    @Override
-                    public void accept(@NonNull Disposable disposable) throws Exception {
-                        btnFormUpload2.setText("正在上传中...");
-                    }
-                })//
-                .observeOn(AndroidSchedulers.mainThread())//
-                .subscribe(new Observer<Progress>() {
-                    @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-                        addDisposable(d);
-                    }
-
-                    @Override
-                    public void onNext(@NonNull Progress progress) {
-                        System.out.println("uploadProgress: " + progress);
-
-                        String downloadLength = Formatter.formatFileSize(getApplicationContext(), progress.currentSize);
-                        String totalLength = Formatter.formatFileSize(getApplicationContext(), progress.totalSize);
-                        tvDownloadSize.setText(downloadLength + "/" + totalLength);
-                        String speed = Formatter.formatFileSize(getApplicationContext(), progress.speed);
-                        tvNetSpeed.setText(String.format("%s/s", speed));
-                        tvProgress.setText(numberFormat.format(progress.fraction));
-                        pbProgress.setMax(10000);
-                        pbProgress.setProgress((int) (progress.fraction * 10000));
-                    }
-
-                    @Override
-                    public void onError(@NonNull Throwable e) {
-                        e.printStackTrace();
-                        btnFormUpload2.setText("上传出错");
-                        showToast(e.getMessage());
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        btnFormUpload2.setText("上传完成");
-                    }
-                });
     }
 }

@@ -28,7 +28,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -63,38 +62,6 @@ public class RxBitmapActivity extends BaseRxDetailActivity {
 
     @OnClick(R.id.requestImage)
     public void requestImage(View view) {
-        ServerApi.getBitmap("aaa", "bbb")//
-                .subscribeOn(Schedulers.io())//
-                .doOnSubscribe(new Consumer<Disposable>() {
-                    @Override
-                    public void accept(@NonNull Disposable disposable) throws Exception {
-                        showLoading();
-                    }
-                })//
-                .observeOn(AndroidSchedulers.mainThread())//
-                .subscribe(new Observer<Response<Bitmap>>() {
-                    @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-                        addDisposable(d);
-                    }
 
-                    @Override
-                    public void onNext(@NonNull Response<Bitmap> response) {
-                        handleResponse(response);
-                        imageView.setImageBitmap(response.body());
-                    }
-
-                    @Override
-                    public void onError(@NonNull Throwable e) {
-                        e.printStackTrace();            //请求失败
-                        handleError(null);
-                        showToast("请求失败");
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        dismissLoading();
-                    }
-                });
     }
 }

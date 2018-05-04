@@ -3,9 +3,9 @@ apply plugin: 'com.jfrog.bintray'
 
 version = rootProject.ext.versionName_okgo      // 数据仓库依赖第三部分
 
-def siteUrl = 'https://github.com/jeasonlzy/OkGo'
-def gitUrl = 'https://github.com/jeasonlzy/OkGo.git'
-group = "com.lzy.net"       // 数据仓库依赖第一部分
+def siteUrl = 'https://github.com/tuzhao/okhttp-OkGo'
+def gitUrl = 'git@github.com:tuzhao/okhttp-OkGo.git'
+group = "org.tuzhao.net"       // 数据仓库依赖第一部分
 
 install {
     repositories.mavenInstaller {
@@ -22,9 +22,9 @@ install {
                 }
                 developers {
                     developer {
-                        id 'jeasonlzy'                // 开发者信息
-                        name 'LiaoZiYao'              // 开发者信息
-                        email 'liaojeason@126.com'    // 开发者信息
+                        id 'tuhao'                // 开发者信息
+                        name 'tuzhao'              // 开发者信息
+                        email 'tuzhaocn@gmail.com'    // 开发者信息
                     }
                 }
                 scm {
@@ -70,8 +70,8 @@ artifacts {
 
 // 生成jar包
 task releaseJar(type: Copy) {
-    from( 'build/intermediates/bundles/default')
-    into( '../jar')
+    from('build/intermediates/bundles/default')
+    into('../jar')
     include('classes.jar')
     rename('classes.jar', 'okgo-' + version + '.jar')
 }

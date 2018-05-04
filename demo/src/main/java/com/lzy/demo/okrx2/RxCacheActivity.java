@@ -20,21 +20,9 @@ import android.view.View;
 
 import com.lzy.demo.R;
 import com.lzy.demo.base.BaseRxDetailActivity;
-import com.lzy.demo.utils.Urls;
-import com.lzy.okgo.OkGo;
-import com.lzy.okgo.cache.CacheMode;
-import com.lzy.okgo.convert.StringConvert;
-import com.lzy.okgo.model.Response;
-import com.lzy.okrx2.adapter.ObservableResponse;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * ================================================
@@ -64,45 +52,5 @@ public class RxCacheActivity extends BaseRxDetailActivity {
     @OnClick(R.id.cache)
     public void cache(View view) {
 
-        // 详细看文档： https://github.com/jeasonlzy/okhttp-OkGo/wiki/OkRx
-
-        OkGo.<String>post(Urls.URL_METHOD)//
-                .headers("aaa", "111")//
-                .params("bbb", "222")//
-                .cacheKey("rx_cache")              //这里完全同okgo的配置一样
-                .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)  //这里完全同okgo的配置一样
-                .converter(new StringConvert())//
-                .adapt(new ObservableResponse<String>())//
-                .subscribeOn(Schedulers.io())//
-                .doOnSubscribe(new Consumer<Disposable>() {
-                    @Override
-                    public void accept(@NonNull Disposable disposable) throws Exception {
-                        showLoading();
-                    }
-                })//
-                .observeOn(AndroidSchedulers.mainThread())//
-                .subscribe(new Observer<Response<String>>() {
-                    @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-                        addDisposable(d);
-                    }
-
-                    @Override
-                    public void onNext(@NonNull Response<String> response) {
-                        handleResponse(response);
-                    }
-
-                    @Override
-                    public void onError(@NonNull Throwable e) {
-                        e.printStackTrace();
-                        showToast("请求失败");
-                        handleError(null);
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        dismissLoading();
-                    }
-                });
     }
 }

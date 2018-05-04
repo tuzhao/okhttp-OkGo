@@ -10,6 +10,10 @@ android {
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName_okgo
     }
+
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
