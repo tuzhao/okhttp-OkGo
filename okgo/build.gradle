@@ -1,5 +1,29 @@
 apply plugin: 'com.android.library'
 
+ext {
+    bintrayRepo = 'maven'
+    bintrayName = 'okgo'
+
+    publishedGroupId = 'org.tuzhao.net'
+    libraryName = 'okgo'
+    artifact = 'okgo'
+
+    libraryDescription = 'OkGo For Android'
+
+    siteUrl = 'https://github.com/tuzhao/okhttp-OkGo'
+    gitUrl = 'git@github.com:tuzhao/okhttp-OkGo.git'
+
+    libraryVersion = LIBRARY_VERSION as String
+
+    developerId = 'tuzhao'
+    developerName = 'tuzhao'
+    developerEmail = 'tuzhaocn@gmail.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
 android {
     compileSdkVersion 27
     buildToolsVersion '27.0.3'
@@ -21,4 +45,8 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.10.0'
 }
 
-apply from: 'bintray.gradle'
+// upload command
+// ./gradlew clean build bintrayUpload -PdryRun=false
+
+apply from: 'bintrayv1.gradle'
+apply from: 'installv1.gradle'
